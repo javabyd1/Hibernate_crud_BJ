@@ -1,6 +1,5 @@
 package com.mojafirma.model;
 
-
 import javax.persistence.*;
 
 @Entity

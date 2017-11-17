@@ -17,8 +17,7 @@ public class Main {
         user1.setName("andrzej");
         user1.setSurname("kowalski");
 
-        userDaoImpl.insertUser(user);
-        userDaoImpl.insertUser(user1);
+        userDaoImpl.removeUser(19);
 
         HibernateUtility.getHibernateSession().getSessionFactory().close();
     }

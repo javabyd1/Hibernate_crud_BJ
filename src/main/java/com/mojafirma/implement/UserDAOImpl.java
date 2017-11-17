@@ -11,12 +11,12 @@ import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
 
-	Session session = HibernateUtility.getHibernateSession();
-
 	@Override
 	public User insertUser(User u) {
 
+		Session session = HibernateUtility.getHibernateSession();
 		try{
+			session.getSessionFactory().openSession();
 			System.out.println(u.getName()+" "+u.getSurname());
 			session.beginTransaction();
 			session.save(u);
@@ -28,15 +28,18 @@ public class UserDAOImpl implements UserDAO {
 			}
 	    	e.printStackTrace();
 		  }
+		  session.close();
 		return u;
 	}
 
 	@Override
 	public List<User> getAllUsers() {
 
+		Session session = HibernateUtility.getHibernateSession();
 		List<User> users = null;
 
 		try{
+			session.getSessionFactory().openSession();
 	    	  session.beginTransaction();
 	          users = session.createQuery("FROM User").list();
 	          for (Iterator<User> iterator =
@@ -56,7 +59,9 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public void updateUser(int id, String name,String surname){
 
+		Session session = HibernateUtility.getHibernateSession();
 		try{
+			session.getSessionFactory().openSession();
 	         session.beginTransaction();
 	         User user = session.get(User.class, id);
 	         System.out.println(" "+user.getName());
@@ -69,24 +74,32 @@ public class UserDAOImpl implements UserDAO {
 	         if (session.getTransaction()!=null) session.getTransaction().rollback();
 	         e.printStackTrace();
 	    }
+	    session.close();
 	}
 	@Override
 	public void removeUser(int id) {
 
+		Session session = HibernateUtility.getHibernateSession();
 		try{
+			session.getSessionFactory().openSession();
+			session.beginTransaction();
+
 	         User user = session.get(User.class, id);
 	         System.out.println("  "+user.getName()+"  "+user.getSurname());
 	         session.delete(user);
+
 	         session.getTransaction().commit();
 	    }
 		catch (HibernateException e) {
 	         if (session.getTransaction()!= null) session.getTransaction().rollback();
 	         e.printStackTrace();
 	      }
+	      session.close();
 	}
 
 	@Override
 	public User findUser(int id) {
+		Session session = HibernateUtility.getHibernateSession();
 
 		User user = session.get(User.class, id);
 		System.out.println(" "+user.getName()+"  "+user.getSurname());
